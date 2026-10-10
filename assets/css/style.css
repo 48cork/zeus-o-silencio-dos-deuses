@@ -4,3 +4,4 @@
 @media(max-width:480px){body{font-size:1rem}.shell{width:calc(100% - 24px)}.masthead{padding:1rem 12px}.masthead nav{gap:.35rem}.masthead button{padding:.5rem .6rem}.chapter-line{flex-wrap:wrap;gap:.5rem;margin-top:1.3rem}h1{margin-top:.8rem}figcaption{align-items:flex-start;flex-direction:column;gap:.3rem}.reading-layout{gap:1.5rem}.option{padding:.8rem}.dialog-top{align-items:flex-start}dialog{padding:1rem}.oracle-quote{font-size:1.15rem}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 @media print{.masthead nav,button,.actions,#choices,#ledger,.storage-status,dialog,.chapter-line ol{display:none}.shell{width:100%}.reading-layout{display:block}body{font-size:11pt;background:white}}
+.language-link{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .8rem;font:.85rem/1.5 system-ui,sans-serif}
