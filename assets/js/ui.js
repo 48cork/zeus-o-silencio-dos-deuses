@@ -1,3 +1,4 @@
+import { introducedPage } from '../data/introducao.js';
 import { illustrations } from '../data/ilustracoes.js';
 import { view, sceneNames, oracle, questions, activity, references, historicalNotes } from '../data/episodio.js';
 import { resourceSummary } from './engine.js';
@@ -40,7 +41,7 @@ export function initDialogs() {
   $('image-retry').addEventListener('click',()=>{const img=$('scene-image');const src=img.getAttribute('src');img.removeAttribute('src');img.src=src;});
 }
 export function render(s,handlers,{focus=true,resume=null}={}) {
-  const v=view(s),node=s.node;
+  const v=introducedPage(s,view(s),'pt'),node=s.node;
   const number=/^C0[1-5]$/.test(v.scene)?Number(v.scene.slice(-1)):0;
   $('chapter').textContent=number?`Cena ${number} de 5 · ${sceneNames[v.scene]}`:v.scene==='AB'?'Grécia continental · cerca de 470 a.C.':v.scene==='EP'?'Epílogo · compromissos e consequências':'Discussão · informação, escolha e aprendizagem';
   $('progress').replaceChildren();for(let i=1;i<=5;i++){const li=element('li',String(i),{'aria-label':`Cena ${i}`});if(i===number)li.setAttribute('aria-current','step');$('progress').append(li);}
@@ -55,7 +56,9 @@ export function render(s,handlers,{focus=true,resume=null}={}) {
   if(resume&&node==='AB'){
     const box=element('div',undefined,{class:'notice'});box.append(element('p',`Há um percurso salvo: ${sceneNames[view(resume.state).scene]}.`),button('Continuar percurso salvo',handlers.resume,true));$('choices').append(box);
   }
-  if(v.options){
+  if(node==='AB'){
+    $('choices').append(button('Começar o episódio',()=>handlers.command({type:'choose',id:'COMEÇAR'},node),true));
+  }else if(v.options){
     const form=element('form',undefined,{'aria-label':'Escolha e confirmação'}),fieldset=element('fieldset');fieldset.append(element('legend',node==='AB'?'Iniciar':'Sua escolha'));
     const submit=element('button',node==='AB'?'Começar':'Confirmar escolha',{type:'submit',class:'primary'});submit.disabled=true;let selected=null;
     for(const [i,o] of v.options.entries()){
@@ -92,4 +95,16 @@ export function openNotes(){openDialog('Notas históricas e referências',c=>{
   paragraphs(c,historicalNotes);c.append(element('h3','Referências registradas na concepção'),element('p','Os links das referências abrem em uma nova aba.'));
   for(const [title,url,caveat]of references){const p=element('p');p.append(element('a',title,{href:url,target:'_blank',rel:'noopener noreferrer'}),element('span',` — ${caveat}`));c.append(p);}
   c.append(element('p','Evidência é o que a fonte sustenta; reconstrução combina comparáveis com hipóteses; invenção cria os acontecimentos e as regras do episódio. As fontes não foram todas reverificadas na implementação.'));
+});}
+
+export function openHelp(){openDialog('Como jogar',c=>{
+  paragraphs(c,[
+    'Escolha uma opção, leia seu custo e seus limites e pressione Confirmar escolha. Os recursos disponíveis ficam ao lado da história.',
+    'Você é Níkanor. Pode oferecer seu trabalho, transmitir necessidades e defender propostas. Não pode decidir pelos bens da família nem pela cidade inteira. Quem controla alimento ou tempo de trabalho precisa autorizar seu uso.',
+    'Promessa, autorização e ajuda realizada são diferentes. O diário registra também o que foi observado, relatado e interpretado.',
+    'A viagem a Delfos já está financiada. Sua contribuição não a desbloqueia. Não há pontuação de fé nem resposta divina comprovada.',
+    'Os quadros avançam apenas quando você pede. Pular ou rever não altera recursos ou escolhas. Rever introdução permanece disponível durante a partida.',
+    'Use Revisar para reler o percurso ou refazer escolhas em uma cópia; Progresso permite exportar ou recuperar a partida. Anotações da discussão não são salvas.',
+    'Notas históricas distingue evidência, reconstrução e ficção.'
+  ]);
 });}

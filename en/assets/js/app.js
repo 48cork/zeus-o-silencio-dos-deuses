@@ -1,3 +1,5 @@
+import { createIntroduction } from '../../../assets/js/introducao.js';
+import * as introductionUI from './ui.js';
 import { initialState, dispatch, rewind } from './engine.js';
 import { createStore, parseRecord, MAX_BYTES } from './storage.js';
 import { view, sceneNames } from '../data/episodio.js';
@@ -6,18 +8,18 @@ let adapter;try{adapter=window.localStorage;}catch{adapter={getItem(){throw new 
 const store=createStore(adapter);let state=initialState(),scan=store.scan(),resume=scan.current,landing=true;
 const $=id=>document.getElementById(id);
 function notify(result){status(result.ok?"Progress saved in this browser.":result.conflict?"Another path changed. Your path is safe.":"Cannot save in this browser. You can keep playing here. Export your path to keep a copy.");if(result.conflict)conflict(true);}
-function paint(focus=true){render(state,{command:act,resume:continueSaved,restart},{focus,resume:landing?resume:null});}
+function paint(focus=true){render(state,{command:act,resume:continueSaved,restart},{focus,resume:landing?resume:null});introduction.render();}
 function save({force=false}={}){const result=store.save(state,{force});notify(result);return result;}
 function exportProgress(){const source=landing&&resume?JSON.stringify(resume.record,null,2):store.export(state);const blob=new Blob([source],{type:'application/json'});const url=URL.createObjectURL(blob);const link=element('a',undefined,{href:url,download:'zeus-progresso.json'});document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);announce("Progress file exported.");}
 function act(command,node){
   if(state.node!==node)return;
   if(store.hasConflict()){conflict(true);status("Another tab saved new progress. Recover a saved path or continue in a copy before choosing again.");return;}
   if(landing&&resume&&command.type==='choose') {confirmDialog("Start another path?","Your current path stays saved. You will start a new one.",()=>{store.fork();resume=null;landing=false;act(command,node);},{exportAction:exportProgress,label:"Start a new path"});return;}
-  try{state=dispatch(state,command);landing=false;resume=null;save();paint();}catch(error){status(`Cannot confirm: ${error.message}`);}
+  try{state=dispatch(state,command);landing=false;resume=null;save();if(node==='AB')introduction.begin();paint();}catch(error){status(`Cannot confirm: ${error.message}`);}
 }
-function continueSaved(){if(!resume)return;state=resume.state;store.adopt(resume.record);landing=false;resume=null;conflict(false);paint();status("Path recovered. Past choices were restored without using resources again.");}
-function restart(){confirmDialog("Start another path?","You will start again at the opening. Your old path stays saved.",()=>{store.clearForNew();state=initialState();landing=false;resume=null;conflict(false);save();paint();},{exportAction:exportProgress,label:"Start another path"});}
-function restore(candidate){confirmDialog("Recover this path?",`Continue at ${sceneNames[view(candidate.state).scene]} using ${candidate.slot==='backup'?"the previous copy":"the selected save"}? Your current path stays saved.`,()=>{state=candidate.state;store.fork();store.adopt(candidate.record);landing=false;resume=null;conflict(false);save({force:true});paint();},{exportAction:exportProgress,label:"Recover path"});}
+function continueSaved(){if(!resume)return;state=resume.state;store.adopt(resume.record);landing=false;resume=null;conflict(false);introduction.restore();paint();status("Path recovered. Past choices were restored without using resources again.");}
+function restart(){confirmDialog("Start another path?","You will start again at the opening. Your old path stays saved.",()=>{store.clearForNew();state=initialState();introduction.reset();landing=false;resume=null;conflict(false);save();paint();},{exportAction:exportProgress,label:"Start another path"});}
+function restore(candidate){confirmDialog("Recover this path?",`Continue at ${sceneNames[view(candidate.state).scene]} using ${candidate.slot==='backup'?"the previous copy":"the selected save"}? Your current path stays saved.`,()=>{state=candidate.state;introduction.reset();store.fork();store.adopt(candidate.record);landing=false;resume=null;conflict(false);save({force:true});paint();},{exportAction:exportProgress,label:"Recover path"});}
 function recover(){scan=store.scan();openDialog("Save and recover progress",c=>{
   c.append(element('p',"Progress is saved in this browser for this website. It may be lost if you clear browser data or use another address. Export a file to keep a copy or move it."));
   const exp=element('button',"Export my path",{type:'button'});exp.addEventListener('click',exportProgress);c.append(exp);
@@ -29,12 +31,14 @@ function recover(){scan=store.scan();openDialog("Save and recover progress",c=>{
   const dedup=new Set();for(const candidate of scan.candidates){const identity=`${candidate.base}:${candidate.slot}`;if(dedup.has(identity))continue;dedup.add(identity);const b=element('button',`${candidate.label} · ${sceneNames[view(candidate.state).scene]} · ${new Date(candidate.record.updatedAt).toLocaleString('en')}`,{type:'button'});b.addEventListener('click',()=>restore(candidate));c.append(b);}
   const start=element('button',"Begin another path",{type:'button'});start.addEventListener('click',restart);c.append(start);
 });}
+const introduction=createIntroduction({locale:'en',adapter,ui:introductionUI,paint,getState:()=>state});
 initDialogs();
+$('intro-button').addEventListener('click',()=>introduction.review());
 for(const id of ['diary-button','ledger-diary'])$(id).addEventListener('click',()=>openDiary(state));
 $('notes-button').addEventListener('click',openNotes);
 $('help-button').addEventListener('click',openHelp);
 $('save-button').addEventListener('click',recover);
-$('history-button').addEventListener('click',()=>openHistory(state,index=>{store.fork();state=rewind(state,index);landing=false;resume=null;conflict(false);save();paint();},exportProgress));
+$('history-button').addEventListener('click',()=>openHistory(state,index=>{store.fork();state=rewind(state,index);introduction.reset();landing=false;resume=null;conflict(false);save();paint();},exportProgress));
 $('conflict-recover').addEventListener('click',recover);
 $('conflict-export').addEventListener('click',exportProgress);
 $('conflict-fork').addEventListener('click',()=>{store.fork();conflict(false);save();paint();});

@@ -1,3 +1,4 @@
+import { introducedPage } from '../../../assets/data/introducao.js';
 import { translateText } from '../data/translations.js';
 import { illustrations } from '../data/ilustracoes.js';
 import { view, sceneNames, oracle, questions, activity, references, historicalNotes } from '../data/episodio.js';
@@ -42,7 +43,7 @@ export function initDialogs() {
   $('image-retry').addEventListener('click',()=>{const img=$('scene-image');const src=img.getAttribute('src');img.removeAttribute('src');img.src=src;});
 }
 export function render(s,handlers,{focus=true,resume=null}={}) {
-  const v=view(s),node=s.node;
+  const v=introducedPage(s,view(s),'en'),node=s.node;
   const number=/^C0[1-5]$/.test(v.scene)?Number(v.scene.slice(-1)):0;
   $('chapter').textContent=number?`Scene ${number} of 5 · ${sceneNames[v.scene]}`:v.scene==='AB'?"Phocis, mainland Greece · around 470 BCE":v.scene==='EP'?"Epilogue · what happened and what remains":"Discussion · reflect on your choices";
   $('progress').replaceChildren();for(let i=1;i<=5;i++){const li=element('li',String(i),{'aria-label':`Scene ${i}`});if(i===number)li.setAttribute('aria-current','step');$('progress').append(li);}
@@ -104,6 +105,7 @@ export function openHelp(){openDialog("How to play",c=>{
     "You play as Níkanor. You can offer your work, report needs, and suggest plans. You cannot decide how to use your family's food or act for the whole city. The people who control the food or work time must agree before it is used.",
     "A promise is not permission. Permission is not help already given. Your journal keeps these separate, alongside what people saw, reported, and understood.",
     "The journey to Delphi is already funded. You do not need to give food or work to join it.",
+    "The panels move only when you choose. Skipping or reviewing them changes no resources or choices. Review introduction remains available during the story.",
     "Use Review to reread or try different choices in a saved copy. Use Progress to export or recover your path. Discussion notes are not saved.",
     "Historical notes explains what the sources support, what has been reconstructed, and what is invented. No choice proves what the gods intend."
   ]);

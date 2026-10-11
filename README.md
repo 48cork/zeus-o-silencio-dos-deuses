@@ -12,7 +12,7 @@ O progresso fica no navegador, por origem; não é enviado a um servidor. A inte
 
 ## Imagens e referências
 
-As seis pinturas aprovadas são apresentadas inteiras, com textos alternativos, descrições e ampliação. As notas históricas e suas ressalvas estão disponíveis no episódio. As imagens somam aproximadamente 17 MB, sem versões otimizadas; a interface solicita a imagem da cena atual.
+As seis pinturas principais e as três pinturas da introdução aprovadas são apresentadas inteiras, com textos alternativos, descrições e ampliação. As notas históricas e suas ressalvas estão disponíveis no episódio. As imagens são preservadas nos PNGs aprovados, sem versões otimizadas; a interface solicita a imagem da cena atual.
 
 ## Publicação
 
@@ -37,3 +37,12 @@ The revision clarifies all English text and keeps supplementary context availabl
 ### Shorter English opening — authorized v0.2.1 adjustment
 
 The opening now uses the owner's exact short text and a single Start the story button. Date and region remain in a small scene label. How to play and Historical notes stay available throughout the episode. The opening changes presentation only; authority, consent, costs, rules, images, and saved-progress compatibility are preserved.
+
+
+## Introdução em quatro quadros — aprovação local bilíngue
+
+Em 11/10/2026, o responsável pelo projeto experimentou e aprovou a introdução integrada localmente em português e inglês e autorizou esta atualização. Essa avaliação é do responsável, não de Kate. A sequência usa três novas pinturas aprovadas e C01 integral como quarto quadro, textos separados das imagens, identificação dos parentescos, avanço manual, pulo e revisão. Timôn e Lísias são apresentados ao entrar na história; Lísias conduz a consulta e Níkanor não assume compromissos pela cidade.
+
+Ler, pular ou rever não altera recursos ou decisões. Partidas anteriores continuam no ponto salvo; a posição de leitura da introdução é registrada separadamente e não muda o formato de progresso. Recursos, consentimentos, regras, consequências e imagens anteriores são preservados. As duas edições usam o mesmo progresso por origem.
+
+Testes automatizados exercitam os 4.896 percursos completos e 27.884 estados, além de retomada, importação, entrega única e navegação dos quadros. A conferência automatizada em navegador real continua bloqueada pelo ambiente; a experimentação do responsável é uma validação local distinta. Permanecem as pendências históricas, de acessibilidade assistiva e as marcas residuais dos tecidos registradas no lote aprovado. A implantação desta atualização só pode ser confirmada após push e build do Pages.
