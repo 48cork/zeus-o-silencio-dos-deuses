@@ -24,7 +24,7 @@ export function announce(text){$('announcement').textContent=text;}
 export function status(text){$('storage-status').textContent=text;}
 export function conflict(show){$('conflict').hidden=!show;}
 export function confirmDialog(title,text,action,{exportAction=null,label="Confirm"}={}) {
-  openDialog(title,c=>{paragraphs(c,[text]);if(exportAction)c.append(button("Export path first",exportAction));c.append(button(label,()=>{closeDialog();action();},true),button("Cancel",closeDialog));});
+  openDialog(title,c=>{paragraphs(c,[text]);if(exportAction)c.append(button("Export your path first",exportAction));c.append(button(label,()=>{closeDialog();action();},true),button("Cancel",closeDialog));});
 }
 export function initDialogs() {
   $('dialog-close').addEventListener('click',closeDialog);
@@ -44,21 +44,21 @@ export function initDialogs() {
 export function render(s,handlers,{focus=true,resume=null}={}) {
   const v=view(s),node=s.node;
   const number=/^C0[1-5]$/.test(v.scene)?Number(v.scene.slice(-1)):0;
-  $('chapter').textContent=number?`Scene ${number} of 5 · ${sceneNames[v.scene]}`:v.scene==='AB'?"Greek mainland · around 470 BCE":v.scene==='EP'?"Epilogue · commitments and consequences":"Discussion · information, choice, and learning";
+  $('chapter').textContent=number?`Scene ${number} of 5 · ${sceneNames[v.scene]}`:v.scene==='AB'?"Mainland Greece · around 470 BCE":v.scene==='EP'?"Epilogue · what happened and what remains":"Discussion · reflect on your choices";
   $('progress').replaceChildren();for(let i=1;i<=5;i++){const li=element('li',String(i),{'aria-label':`Scene ${i}`});if(i===number)li.setAttribute('aria-current','step');$('progress').append(li);}
   $('scene-title').textContent=v.title;
   const image=illustrations[v.scene];$('art').hidden=!image||v.image===false;
-  if(image&&v.image!==false){const img=$('scene-image');if(img.getAttribute('src')!==image.src){$('image-error').hidden=true;img.width=image.width;img.height=image.height;img.alt=image.alt;img.src=image.src;} $('image-description').textContent=image.description;$('art-caption').textContent=v.scene==='AB'?"Episode landscape · contemporary painting":"Image of the initial situation · does not show the consequences of your choice";}
+  if(image&&v.image!==false){const img=$('scene-image');if(img.getAttribute('src')!==image.src){$('image-error').hidden=true;img.width=image.width;img.height=image.height;img.alt=image.alt;img.src=image.src;} $('image-description').textContent=image.description;$('art-caption').textContent=v.scene==='AB'?"The setting · a modern painting":"Before your choice · no outcome shown";}
   for(const id of ['paragraphs','information','oracle','choices','discussion','resources'])$(id).replaceChildren();
   paragraphs($('paragraphs'),v.paragraphs);
   if(v.info)for(const [title,text]of v.info){const d=element('details');d.append(element('summary',title),element('p',text));$('information').append(d);}
-  if(v.oracle){const d=element('details');d.append(element('summary',"Reread the oracular message"),element('p',oracle,{class:'oracle-quote'}),element('p',"Fictional message reported by Lísias; no interpretation is confirmed."));$('oracle').append(d);}
+  if(v.oracle){const d=element('details');d.append(element('summary',"Read the oracle again"),element('p',oracle,{class:'oracle-quote'}),element('p',"Lísias reports this fictional message. No reading is confirmed."));$('oracle').append(d);}
   paragraphs($('resources'),resourceSummary(s));
   if(resume&&node==='AB'){
-    const box=element('div',undefined,{class:'notice'});box.append(element('p',`There is a saved path: ${sceneNames[view(resume.state).scene]}.`),button("Continue saved path",handlers.resume,true));$('choices').append(box);
+    const box=element('div',undefined,{class:'notice'});box.append(element('p',`A path is saved: ${sceneNames[view(resume.state).scene]}.`),button("Continue saved path",handlers.resume,true));$('choices').append(box);
   }
   if(v.options){
-    const form=element('form',undefined,{'aria-label':"Choice and confirmation"}),fieldset=element('fieldset');fieldset.append(element('legend',node==='AB'?"Start":"Your choice"));
+    const form=element('form',undefined,{'aria-label':"Choose, then confirm"}),fieldset=element('fieldset');fieldset.append(element('legend',node==='AB'?"Start":"Your choice"));
     const submit=element('button',node==='AB'?"Begin":"Confirm choice",{type:'submit',class:'primary'});submit.disabled=true;let selected=null;
     for(const [i,o] of v.options.entries()){
       const label=element('label',undefined,{class:'option'}),input=element('input',undefined,{type:'radio',name:'choice',value:o.id,id:`choice-${i}`});input.disabled=Boolean(o.reason);
@@ -70,28 +70,28 @@ export function render(s,handlers,{focus=true,resume=null}={}) {
     form.append(fieldset,submit);form.addEventListener('submit',event=>{event.preventDefault();if(selected!==null)handlers.command({type:'choose',id:selected},node);});$('choices').append(form);
   }else if(!v.terminal){const actions=element('div',undefined,{class:'actions'});actions.append(button(v.scene==='EP'?"Open discussion":"Continue",()=>handlers.command({type:'continue'},node),true));$('choices').append(actions);}
   if(v.discussion){
-    $('discussion').append(element('h2',"Questions for Discussion"));const list=element('ol');
+    $('discussion').append(element('h2',"Discussion questions"));const list=element('ol');
     for(const [i,q]of questions.entries()){const li=element('li');li.append(element('p',q));const label=element('label',`Note ${i+1} (optional)`,{for:`response-${i}`,class:'response-hint'}),field=element('textarea',undefined,{id:`response-${i}`,rows:'3'});li.append(label,field);list.append(li);}
-    $('discussion').append(list,element('p',"These notes are not saved with your progress. Copy them before leaving.",{class:'response-hint'}),element('h2',"Compare Paths"),element('p',activity),button("View historical notes and references",openNotes),button("Begin another path",handlers.restart));
+    $('discussion').append(list,element('p',"These notes are not saved. Copy them before you leave.",{class:'response-hint'}),element('h2',"Compare paths"),element('p',activity),button("Read the historical notes",openNotes),button("Begin another path",handlers.restart));
   }
   $('ledger').hidden=v.scene==='AB';
-  if(focus){$('scene-title').focus({preventScroll:true});$('scene-title').scrollIntoView({block:'start',behavior:'auto'});announce(v.options?"Situation and choices available.":v.terminal?"Discussion available.":"Consequence displayed. Read before continuing.");}
+  if(focus){$('scene-title').focus({preventScroll:true});$('scene-title').scrollIntoView({block:'start',behavior:'auto'});announce(v.options?"Read the situation and choose.":v.terminal?"Discussion is ready.":"Read what happened before continuing.");}
 }
-export function openDiary(s){openDialog("Path Journal",c=>{
+export function openDiary(s){openDialog("Your journal",c=>{
   c.append(element('h3',"Resources"));paragraphs(c,resourceSummary(s));
-  c.append(element('h3',"Commitments: promise, authorization, and completion"));
-  if(!s.commitments.length)c.append(element('p',"No commitment has been recorded yet."));
-  for(const item of s.commitments){const block=element('section',undefined,{class:'commitment'});block.append(element('h3',item.object));paragraphs(block,[`Responsible person: ${item.by}. Recipient: ${item.beneficiary}.`,`Promised: ${item.promised?"yes":"not recorded as a personal promise"}. Authorization: ${item.authorized?"confirmed for the stated scope":"not fully confirmed"}. Completed: ${item.realized?"yes":"no"}.`,...(item.deadline?[`Deadline: ${item.deadline}.`]:[]),...(item.conditions?[`Conditions: ${item.conditions}`]:[])]);c.append(block);}
-  c.append(element('h3',"What Was Observed and Reported"));
-  if(!s.journal.length)c.append(element('p',"The journal will fill up during the episode."));
+  c.append(element('h3',"Commitments: promised, agreed, done"));
+  if(!s.commitments.length)c.append(element('p',"No commitments recorded yet."));
+  for(const item of s.commitments){const block=element('section',undefined,{class:'commitment'});block.append(element('h3',item.object));paragraphs(block,[`Who is responsible: ${item.by}. Who receives help: ${item.beneficiary}.`,`Promised: ${item.promised?"yes":"no personal promise recorded"}. Permission: ${item.authorized?"agreed within the stated limits":"not fully agreed"}. Done: ${item.realized?"yes":"no"}.`,...(item.deadline?[`Deadline: ${item.deadline}.`]:[]),...(item.conditions?[`Conditions: ${item.conditions}`]:[])]);c.append(block);}
+  c.append(element('h3',"What people saw and said"));
+  if(!s.journal.length)c.append(element('p',"Your journal will fill as you play."));
   for(const item of s.journal){const p=element('p',undefined,{class:'journal-entry'});p.append(element('span',`${item.scene} · ${item.kind}`,{class:'journal-kind'}),document.createTextNode(translateText(item.text)));c.append(p);}
 });}
-export function openHistory(s,onRewind,exportAction){openDialog("Review Your Path",c=>{
-  paragraphs(c,["Rereading does not change resources. Revisiting creates a new branch from the chosen point; later choices are discarded from that new branch. The previous path remains recoverable."]);
-  for(const item of s.history){const d=element('details',undefined,{class:'history-item'});d.append(element('summary',`${item.scene} · ${item.title}`));paragraphs(d,item.paragraphs);if(item.at<s.commands.length)d.append(button("Revisit from this point",()=>confirmDialog("Revisit This Section?",`Resume “${item.title}” and discard later choices in this new branch?`,()=>onRewind(item.at),{exportAction,label:"Revisit in a new branch"})));c.append(d);}
+export function openHistory(s,onRewind,exportAction){openDialog("Review your path",c=>{
+  paragraphs(c,["Rereading changes nothing. To choose differently, start a copy from an earlier point. Later choices will be removed from that copy. Your old path stays saved."]);
+  for(const item of s.history){const d=element('details',undefined,{class:'history-item'});d.append(element('summary',`${item.scene} · ${item.title}`));paragraphs(d,item.paragraphs);if(item.at<s.commands.length)d.append(button("Choose again from here",()=>confirmDialog("Return to this point?",`Return to “${item.title}” in a copy without the later choices?`,()=>onRewind(item.at),{exportAction,label:"Start a copy from here"})));c.append(d);}
 });}
-export function openNotes(){openDialog("Historical Notes and References",c=>{
-  paragraphs(c,historicalNotes);c.append(element('h3',"References Recorded in the Conception"),element('p',"Reference links open in a new tab."));
+export function openNotes(){openDialog("Historical notes and sources",c=>{
+  paragraphs(c,historicalNotes);c.append(element('h3',"Sources for the story"),element('p',"Source links open in a new tab."));
   for(const [title,url,caveat]of references){const p=element('p');p.append(element('a',title,{href:url,target:'_blank',rel:"noopener noreferrer"}),element('span',` — ${caveat}`));c.append(p);}
-  c.append(element('p',"Evidence is what a source supports; reconstruction combines parallels with hypotheses; invention creates the episode's events and rules. Not all sources were rechecked during implementation."));
+  c.append(element('p',"Evidence: what a source supports. Reconstruction: a plausible scene built from historical parallels. Invention: this story's people, events, and rules. Some sources still need further checks."));
 });}

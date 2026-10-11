@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#343A3E">
-  <meta name="description" content="An illustrated episode about households, commitments, and an oracle's ambiguous words in ancient Greece.">
+  <meta name="description" content="An illustrated story about a farming family, promises, and an oracle in ancient Greece.">
   <title>ZEUS — The Silence of the Gods</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script type="module" src="assets/js/app.js"></script>
 </head>
 <body>
-  <a class="skip" href="#scene-title">Skip to the reading</a>
+  <a class="skip" href="#scene-title">Skip to story</a>
   <header class="masthead">
-    <a class="wordmark" href="#scene-title" aria-label="ZEUS, go to the reading">ZEUS <span>The Silence of the Gods</span></a>
+    <a class="wordmark" href="#scene-title" aria-label="ZEUS, go to the story">ZEUS <span>The Silence of the Gods</span></a>
     <nav aria-label="Path tools"><a class="language-link" href="../" lang="pt-BR" hreflang="pt-BR">Português</a>
       <button id="diary-button" type="button">Journal</button>
       <button id="history-button" type="button">Review</button>
@@ -21,31 +21,31 @@
     </nav>
   </header>
   <main id="app" class="shell">
-    <div id="conflict" class="notice" hidden role="alert"><p>Another path was updated in a tab. Your path was preserved; choose how to continue.</p><button id="conflict-recover">View saved paths</button><button id="conflict-fork">Continue in a copy</button><button id="conflict-export">Export my path</button></div>
-    <div class="chapter-line"><p id="chapter"></p><ol id="progress" aria-label="Sequence of five scenes"></ol></div>
+    <div id="conflict" class="notice" hidden role="alert"><p>Another tab saved changes. Your path is safe. Choose how to continue.</p><button id="conflict-recover">View saved paths</button><button id="conflict-fork">Continue in a copy</button><button id="conflict-export">Export my path</button></div>
+    <div class="chapter-line"><p id="chapter"></p><ol id="progress" aria-label="Five scenes"></ol></div>
     <h1 id="scene-title" tabindex="-1">ZEUS — The Silence of the Gods</h1>
     <figure id="art" hidden>
       <img id="scene-image" alt="">
       <figcaption><span id="art-caption"></span><button id="enlarge-button" type="button">Enlarge the full image</button></figcaption>
-      <div id="image-error" class="notice" hidden><p>Unable to load the painting. The description and narrative remain available.</p><button id="image-retry" type="button">Try again</button></div>
+      <div id="image-error" class="notice" hidden><p>The image could not load. You can still read its description and the story.</p><button id="image-retry" type="button">Try again</button></div>
       <details><summary>Image description</summary><p id="image-description"></p></details>
     </figure>
     <div class="reading-layout">
-      <article id="reading" aria-label="Narrative and choices">
+      <article id="reading" aria-label="Story and choices">
         <div id="paragraphs"></div>
         <div id="information"></div>
         <div id="oracle"></div>
         <div id="choices"></div>
         <div id="discussion"></div>
       </article>
-      <aside id="ledger" aria-labelledby="ledger-title"><h2 id="ledger-title">What Is Available</h2><div id="resources"></div><button id="ledger-diary" type="button">View commitments in the journal</button></aside>
+      <aside id="ledger" aria-labelledby="ledger-title"><h2 id="ledger-title">Available resources</h2><div id="resources"></div><button id="ledger-diary" type="button">See commitments in your journal</button></aside>
     </div>
     <p id="storage-status" class="storage-status" role="status"></p>
     <p id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></p>
-    <noscript><p class="notice">This episode requires JavaScript to record choices and consequences. Enable it in your browser. Documentary references remain in docs/.</p></noscript>
+    <noscript><p class="notice">JavaScript must be enabled to record choices and consequences. The source documents are in docs/.</p></noscript>
   </main>
-  <footer class="shell footer">Fictional polis and events informed by historical references. Contemporary paintings. No faith score.</footer>
+  <footer class="shell footer">A fictional city and story based on historical sources. Modern paintings. No faith score.</footer>
   <dialog id="utility-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><h2 id="dialog-title"></h2><button id="dialog-close" type="button" autofocus>Close</button></div><div id="dialog-content"></div></dialog>
-  <dialog id="image-dialog" aria-labelledby="image-dialog-title"><div class="dialog-top"><h2 id="image-dialog-title">Full Image</h2><button id="image-close" type="button" autofocus>Close image</button></div><div class="zoom-controls"><button id="zoom-out" type="button">Zoom out</button><button id="zoom-reset" type="button">Reset</button><button id="zoom-in" type="button">Zoom in</button><span id="zoom-status" role="status">100%</span></div><div id="zoom-viewport" tabindex="0" role="region" aria-label="Enlarged image; use the arrow keys to scroll when zoomed in"><img id="zoom-image" alt=""></div><p id="zoom-description"></p></dialog>
+  <dialog id="image-dialog" aria-labelledby="image-dialog-title"><div class="dialog-top"><h2 id="image-dialog-title">Full image</h2><button id="image-close" type="button" autofocus>Close image</button></div><div class="zoom-controls"><button id="zoom-out" type="button">Zoom out</button><button id="zoom-reset" type="button">Reset</button><button id="zoom-in" type="button">Zoom in</button><span id="zoom-status" role="status">100%</span></div><div id="zoom-viewport" tabindex="0" role="region" aria-label="Enlarged image. When zoomed in, use arrow keys to scroll."><img id="zoom-image" alt=""></div><p id="zoom-description"></p></dialog>
 </body>
 </html>
