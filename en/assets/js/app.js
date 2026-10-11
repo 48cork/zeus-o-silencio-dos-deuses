@@ -1,7 +1,7 @@
 import { initialState, dispatch, rewind } from './engine.js';
 import { createStore, parseRecord, MAX_BYTES } from './storage.js';
 import { view, sceneNames } from '../data/episodio.js';
-import { render, initDialogs, openDiary, openHistory, openNotes, openDialog, closeDialog, confirmDialog, element, status, conflict, announce } from './ui.js';
+import { render, initDialogs, openDiary, openHistory, openNotes, openHelp, openDialog, closeDialog, confirmDialog, element, status, conflict, announce } from './ui.js';
 let adapter;try{adapter=window.localStorage;}catch{adapter={getItem(){throw new Error("Browser storage is blocked.");}};}
 const store=createStore(adapter);let state=initialState(),scan=store.scan(),resume=scan.current,landing=true;
 const $=id=>document.getElementById(id);
@@ -32,6 +32,7 @@ function recover(){scan=store.scan();openDialog("Save and recover progress",c=>{
 initDialogs();
 for(const id of ['diary-button','ledger-diary'])$(id).addEventListener('click',()=>openDiary(state));
 $('notes-button').addEventListener('click',openNotes);
+$('help-button').addEventListener('click',openHelp);
 $('save-button').addEventListener('click',recover);
 $('history-button').addEventListener('click',()=>openHistory(state,index=>{store.fork();state=rewind(state,index);landing=false;resume=null;conflict(false);save();paint();},exportProgress));
 $('conflict-recover').addEventListener('click',recover);

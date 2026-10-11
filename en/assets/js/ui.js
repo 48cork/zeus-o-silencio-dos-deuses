@@ -44,7 +44,7 @@ export function initDialogs() {
 export function render(s,handlers,{focus=true,resume=null}={}) {
   const v=view(s),node=s.node;
   const number=/^C0[1-5]$/.test(v.scene)?Number(v.scene.slice(-1)):0;
-  $('chapter').textContent=number?`Scene ${number} of 5 · ${sceneNames[v.scene]}`:v.scene==='AB'?"Mainland Greece · around 470 BCE":v.scene==='EP'?"Epilogue · what happened and what remains":"Discussion · reflect on your choices";
+  $('chapter').textContent=number?`Scene ${number} of 5 · ${sceneNames[v.scene]}`:v.scene==='AB'?"Phocis, mainland Greece · around 470 BCE":v.scene==='EP'?"Epilogue · what happened and what remains":"Discussion · reflect on your choices";
   $('progress').replaceChildren();for(let i=1;i<=5;i++){const li=element('li',String(i),{'aria-label':`Scene ${i}`});if(i===number)li.setAttribute('aria-current','step');$('progress').append(li);}
   $('scene-title').textContent=v.title;
   const image=illustrations[v.scene];$('art').hidden=!image||v.image===false;
@@ -57,7 +57,9 @@ export function render(s,handlers,{focus=true,resume=null}={}) {
   if(resume&&node==='AB'){
     const box=element('div',undefined,{class:'notice'});box.append(element('p',`A path is saved: ${sceneNames[view(resume.state).scene]}.`),button("Continue saved path",handlers.resume,true));$('choices').append(box);
   }
-  if(v.options){
+  if(node==='AB'){
+    $('choices').append(button("Start the story",()=>handlers.command({type:'choose',id:'COMEÇAR'},node),true));
+  }else if(v.options){
     const form=element('form',undefined,{'aria-label':"Choose, then confirm"}),fieldset=element('fieldset');fieldset.append(element('legend',node==='AB'?"Start":"Your choice"));
     const submit=element('button',node==='AB'?"Begin":"Confirm choice",{type:'submit',class:'primary'});submit.disabled=true;let selected=null;
     for(const [i,o] of v.options.entries()){
@@ -94,4 +96,15 @@ export function openNotes(){openDialog("Historical notes and sources",c=>{
   paragraphs(c,historicalNotes);c.append(element('h3',"Sources for the story"),element('p',"Source links open in a new tab."));
   for(const [title,url,caveat]of references){const p=element('p');p.append(element('a',title,{href:url,target:'_blank',rel:"noopener noreferrer"}),element('span',` — ${caveat}`));c.append(p);}
   c.append(element('p',"Evidence: what a source supports. Reconstruction: a plausible scene built from historical parallels. Invention: this story's people, events, and rules. Some sources still need further checks."));
+});}
+
+export function openHelp(){openDialog("How to play",c=>{
+  paragraphs(c,[
+    "Choose an option, read its cost and limits, then select Confirm choice. Check the available resources beside the story.",
+    "You play as Níkanor. You can offer your work, report needs, and suggest plans. You cannot decide how to use your family's food or act for the whole city. The people who control the food or work time must agree before it is used.",
+    "A promise is not permission. Permission is not help already given. Your journal keeps these separate, alongside what people saw, reported, and understood.",
+    "The journey to Delphi is already funded. You do not need to give food or work to join it.",
+    "Use Review to reread or try different choices in a saved copy. Use Progress to export or recover your path. Discussion notes are not saved.",
+    "Historical notes explains what the sources support, what has been reconstructed, and what is invented. No choice proves what the gods intend."
+  ]);
 });}

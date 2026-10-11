@@ -33,3 +33,7 @@ No continuation or appearance of Zeus has been implemented.
 On 2026-10-10, the project owner tested the revised English locally, found the language clear, approved v0.2.1 editorially, and authorized publication. This is the owner's clarity assessment. Historical and accessibility caveats remain.
 
 The revision clarifies all English text and keeps supplementary context available on demand. Portuguese, illustrations, rules, consequences, command IDs, browser-storage keys, and save compatibility are unchanged. The shared progress is neither cleared nor migrated by this update.
+
+### Shorter English opening — authorized v0.2.1 adjustment
+
+The opening now uses the owner's exact short text and a single Start the story button. Date and region remain in a small scene label. How to play and Historical notes stay available throughout the episode. The opening changes presentation only; authority, consent, costs, rules, images, and saved-progress compatibility are preserved.

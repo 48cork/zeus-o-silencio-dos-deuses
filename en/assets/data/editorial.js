@@ -5,10 +5,6 @@ export function readingOrder(state, page, historicalNotes) {
   const info = [...(page.info || [])];
   let paragraphs = p;
   switch (state.node) {
-    case 'AB':
-      info.push(['About this story', historicalNotes[0]],
-        ['History and fiction', historicalNotes[2]]);
-      break;
     case 'C01':
       paragraphs = [p[0], p[1], p[2], p[3], p[4], p[9]];
       info.push(['Who will do the work at home?', [p[5], p[6]].join(' ')],
